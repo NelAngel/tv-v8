@@ -338,6 +338,8 @@ fun LauncherApp(homeSignal: Int, packageSignal: Int, resumeSignal: Int) {
             val pad = if (wide) 52.dp else 20.dp
             // Ventanas bajas (DeX redimensionado, móvil en horizontal): se compacta para que nada se recorte.
             val compactH = maxHeight < 540.dp
+            val showAllLabels = maxWidth >= 980.dp
+            val panelMaxHeight = (maxHeight - 110.dp).coerceAtLeast(220.dp)
             val cardW = if (wide) (if (compactH) 168.dp else 196.dp) else 132.dp
             val cardH = if (wide) (if (compactH) 96.dp else 114.dp) else 84.dp
 
@@ -481,7 +483,7 @@ fun LauncherApp(homeSignal: Int, packageSignal: Int, resumeSignal: Int) {
                     selected = if (showSettingsHub) NavDestination.Settings else activeSection,
                     wide = wide,
                     pad = pad,
-                    showAllLabels = maxWidth >= 980.dp,
+                    showAllLabels = showAllLabels,
                     settingsFocus = settingsFocus,
                     onSelect = { dest ->
                         if (dest == NavDestination.Settings) {
@@ -503,7 +505,7 @@ fun LauncherApp(homeSignal: Int, packageSignal: Int, resumeSignal: Int) {
                 pad = pad,
                 status = quickStatus,
                 hasMediaPermission = hasMediaPermission,
-                maxPanelHeight = (maxHeight - 110.dp).coerceAtLeast(220.dp),
+                maxPanelHeight = panelMaxHeight,
                 onWifi = { SystemSettingsHelper.openWifiSettings(context) },
                 onBluetooth = { SystemSettingsHelper.openBluetoothSettings(context) },
                 onVolumeDown = {
@@ -1773,7 +1775,7 @@ private fun VidaaAppCard(
                 }
             }
 
-            AnimatedVisibility(
+            androidx.compose.animation.AnimatedVisibility(
                 visible = focused,
                 enter = fadeIn(tween(180)) + slideInVertically(tween(200)) { it / 2 },
                 exit = fadeOut(tween(140)),
